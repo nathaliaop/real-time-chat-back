@@ -59,13 +59,13 @@ export class AuthService {
             throw new ForbiddenException(
                 'Password incorret',
             )
-        return this.signToken(user.id, user.email);
+        return this.signToken(user.id, user.email)
     }
 
     async signToken(
         userId: number,
         email: string,
-    ): Promise<{ access_token: string }> {
+    ): Promise<{ token: string, userId: number }> {
         const payload = {
             sub: userId,
             email
@@ -80,7 +80,8 @@ export class AuthService {
             },
         );
         return {
-            access_token: token,
+            token,
+            userId,
         };
     }
 }
