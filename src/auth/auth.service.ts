@@ -21,12 +21,14 @@ export class AuthService {
         try {
             const user = await this.prisma.user.create({
                 data: {
+                    firstName: dto.firstName,
+                    lastName: dto.lastName,
                     email: dto.email,
                     hash,
                 },
 
             })
-            return this.signToken(user.id, user.email);
+            return this.signToken(user.id, user.email, user.firstName, user.lastName);
         } catch(error) {
             if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2002') {
@@ -59,13 +61,15 @@ export class AuthService {
             throw new ForbiddenException(
                 'Password incorret',
             )
-        return this.signToken(user.id, user.email)
+        return this.signToken(user.id, user.email, user.firstName, user.lastName)
     }
 
     async signToken(
         userId: number,
         email: string,
-    ): Promise<{ token: string, userId: number }> {
+        firstName: string,
+        lastName: string
+    ): Promise<{ token: string, userId: number, firstName: string, lastName: string }> {
         const payload = {
             sub: userId,
             email
@@ -82,6 +86,8 @@ export class AuthService {
         return {
             token,
             userId,
+            firstName,
+            lastName
         };
     }
 }
