@@ -18,5 +18,16 @@ model User {
   hash  String
   firstName String?
   lastName  String?
+  messages Message[]
   @@map("users")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  text String
+  userId Int
+  user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("bookmarks")
 }
