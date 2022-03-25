@@ -29,5 +29,5 @@ model Message {
   text String
   userId Int
   user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  @@map("bookmarks")
+  @@map("messages")
 }
