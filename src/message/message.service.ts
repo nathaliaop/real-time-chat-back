@@ -21,8 +21,7 @@ export class MessageService {
                         text: true,
                         user: {
                             select: {
-                                firstName: true,
-                                lastName: true,
+                                username: true
                             }
                         }
                     },
@@ -46,6 +45,15 @@ export class MessageService {
                 text: dto.text,
                 userId,
             },
+            select: {
+                createdAt: true,
+                text: true,
+                user: {
+                    select: {
+                        username: true
+                    }
+                }
+            }
         })
         return message;
     }
