@@ -9,7 +9,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 @Injectable({})
 export class AuthService {
     constructor(
-        private prisma:PrismaService,
+        private prisma: PrismaService,
         private jwt: JwtService,
         private config: ConfigService,
     ) {}
@@ -21,14 +21,13 @@ export class AuthService {
         try {
             const user = await this.prisma.user.create({
                 data: {
-                    firstName: dto.firstName,
-                    lastName: dto.lastName,
+                    username: dto.username,
                     email: dto.email,
                     hash,
                 },
 
             })
-            return this.signToken(user.id, user.email, user.firstName, user.lastName);
+            return this.signToken(user.id, user.email);
         } catch(error) {
             if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2002') {
@@ -61,15 +60,13 @@ export class AuthService {
             throw new ForbiddenException(
                 'Password incorret',
             )
-        return this.signToken(user.id, user.email, user.firstName, user.lastName)
+        return this.signToken(user.id, user.email)
     }
 
     async signToken(
         userId: number,
-        email: string,
-        firstName: string,
-        lastName: string
-    ): Promise<{ token: string, userId: number, firstName: string, lastName: string }> {
+        email: string
+    ): Promise<{ token: string }> {
         const payload = {
             sub: userId,
             email
@@ -84,10 +81,7 @@ export class AuthService {
             },
         );
         return {
-            token,
-            userId,
-            firstName,
-            lastName
+            token
         };
     }
 }
