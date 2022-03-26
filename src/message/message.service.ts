@@ -12,8 +12,6 @@ export class MessageService {
     async getMessages() {
         try {
 
-            //mesage = [{message}]
-
             const messages = await this.prisma.message.findMany(
                 {
                     select: {
