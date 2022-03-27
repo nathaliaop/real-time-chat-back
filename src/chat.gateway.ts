@@ -12,7 +12,6 @@ import { Server, Socket } from 'socket.io';
 import { MessageService } from './message/message.service';
 
 type Payload = {
-  name: string;
   text: string;
 }
 
@@ -37,8 +36,6 @@ export class ChatGateway
     const decodedJwtAccessToken = this.jwtService.decode(auth_token.split(' ')[1]);
 
     const userId = decodedJwtAccessToken.sub
-    //name text
-    console.log(decodedJwtAccessToken)
 
     // create message
     this.messageService.createMessage(
@@ -59,22 +56,22 @@ export class ChatGateway
   }
 
   handleConnection(client: Socket) {
-    const message = {
+    /*const message = {
       name: client.id,
       text: 'O usuário se conectou :D',
     };
 
-    this.server.emit('msgToClient', message);
+    this.server.emit('msgToClient', message);*/
     this.logger.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    const message = {
+    /*const message = {
       name: client.id,
       text: 'O usuário se desconectou :(',
     };
 
-    this.server.emit('msgToClient', message);
+    this.server.emit('msgToClient', message);*/
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 }

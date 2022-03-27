@@ -15,6 +15,7 @@ export class MessageService {
             const messages = await this.prisma.message.findMany(
                 {
                     select: {
+                        id: true,
                         createdAt: true,
                         text: true,
                         user: {
@@ -44,6 +45,7 @@ export class MessageService {
                 userId,
             },
             select: {
+                id: true,
                 createdAt: true,
                 text: true,
                 user: {
