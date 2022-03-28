@@ -8,6 +8,7 @@ import { MessageModule } from './message/message.module';
 import { ChatGateway } from './chat.gateway';
 import { MessageService } from './message/message.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
     MessageModule,
     JwtModule.register({})
   ],
-  providers: [ChatGateway, MessageService]
+  providers: [ChatGateway, MessageService, UserService]
 })
 export class AppModule {}
