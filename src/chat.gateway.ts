@@ -107,10 +107,10 @@ export class ChatGateway
         this.connectedUsers = [...this.connectedUsers, userDto];
 
       }
-    )
-    .catch((error) => {
-      this.logger.error(error);
-    })
+      )
+      .catch((error) => {
+        this.logger.error(error);
+      })
   }
 
   handleDisconnect(client: Socket) {
