@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -22,8 +22,8 @@ export class UserService {
 
             return user;
         }
-        catch {
-            return "Can't get user"
+        catch(error) {
+            throw new ForbiddenException(error)
         }
     }
 }

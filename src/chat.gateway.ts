@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { ForbiddenException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
   OnGatewayConnection,
@@ -8,6 +8,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { umask } from 'process';
 import { Server, Socket } from 'socket.io';
 import { MessageService } from './message/message.service';
 import { UserService } from './user/user.service';
@@ -38,7 +39,7 @@ export class ChatGateway
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatGateway');
 
-  @SubscribeMessage('msgToServer')
+  @SubscribeMessage('sentMessage')
   handleMessage(client: Socket, payload: Payload): void {
 
     let auth_token = client.handshake.headers.authorization;
@@ -57,7 +58,7 @@ export class ChatGateway
     .then((message) => {
       console.log(message)
 
-      this.server.emit('msgToClient', message, client.id);
+      this.server.emit('receivedMessage', message, client.id);
     })
   }
 
@@ -65,50 +66,74 @@ export class ChatGateway
     this.logger.log('Init');
   }
 
+  @SubscribeMessage('firstConnection')
+  handleFirstConnection(client: Socket) {
+    // Filtra valores únicos
+    return this.connectedUsers.filter((value: User, index: number, array: User[]) => array.findIndex((connectedUser: User) => connectedUser.id === value.id) === index)
+  }
+
+  async getUserFromClient(client: Socket): Promise<User> {
+    try {
+      let auth_token = client.handshake.headers.authorization;
+      const decodedJwtAccessToken = this.jwtService.decode(auth_token.split(' ')[1]);
+
+      const userId = decodedJwtAccessToken.sub
+
+      const user = await this.userService.getUser(
+        userId
+      )
+      return user;
+    }
+    catch(error) {
+      throw new ForbiddenException(error)
+    }
+  }
+
   handleConnection(client: Socket) {
-    let auth_token = client.handshake.headers.authorization;
+    this.getUserFromClient(client)
+      .then((user: User) => {
+        const userDto = {
+          id: user.id,
+          username: user.username
+        };
+        
+        this.logger.log(`Client connected: ${userDto.username}`);
+        
+        // Trata instância do mesmo usuário logando duas vezes
+        // Verifica se o usuário já está em connectedUsers
+        if (this.connectedUsers.findIndex((connectedUser) => connectedUser.id === user.id) === -1) {
+          this.server.emit('connectUser', userDto);
+        }
+        this.connectedUsers = [...this.connectedUsers, userDto];
 
-    const decodedJwtAccessToken = this.jwtService.decode(auth_token.split(' ')[1]);
-
-      if (decodedJwtAccessToken) {
-        const userId = decodedJwtAccessToken.sub
-
-        this.userService.getUser(
-          userId
-        )
-        .then((user: User) => {
-          const userDto = {
-            id: userId,
-            username: user.username
-          };
-          this.connectedUsers = [...this.connectedUsers, userDto];
-          this.logger.log(`Client connected: ${userDto.username}`);
-          this.server.emit('users', this.connectedUsers);
-        })
       }
+    )
+    .catch((error) => {
+      this.logger.error(error);
+    })
   }
 
   handleDisconnect(client: Socket) {
-    let auth_token = client.handshake.headers.authorization;
+    this.getUserFromClient(client)
+      .then((user: any) => {
+        const userDto = {
+          id: user.id,
+          username: user.username
+        };
 
-    const decodedJwtAccessToken = this.jwtService.decode(auth_token.split(' ')[1]);
-
-      if (decodedJwtAccessToken) {
-        const userId = decodedJwtAccessToken.sub
-
-        this.userService.getUser(
-          userId
-        )
-        .then((user: any) => {
-          const userDto = {
-            id: userId,
-            createdAt: Date.now(),
-            username: user.username
-          };
-          this.connectedUsers = this.connectedUsers.filter(connectedUser => connectedUser.id !== userId);
-          this.logger.log(`Client disconnected: ${userDto.username}`);
-          this.server.emit('users', this.connectedUsers);
-        })
-      }
+        this.logger.log(`Client disconnected: ${userDto.username}`);
+        
+        // Trata instância do mesmo usuário logando duas vezes
+        const indexOfUser = this.connectedUsers.findIndex((connectedUser: User) => connectedUser.id === user.id);
+        // Remove a primeira ocorrência do usuário
+        this.connectedUsers.splice(indexOfUser, 1);
+        // Verifica se o usuário ainda está em connectedUsers
+        if (this.connectedUsers.findIndex((connectedUser: User) => connectedUser.id === user.id) === -1) {
+          this.server.emit('disconnectUser', userDto);
+        }
+      })
+      .catch((error) => {
+        this.logger.error(error);
+      })
+    }
   }
-}

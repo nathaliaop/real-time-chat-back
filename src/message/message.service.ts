@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMessageDto } from './dto/create-message-dto';
 
@@ -31,7 +31,7 @@ export class MessageService {
             return messages;
         }
         catch {
-            return "Can't get messages"
+            throw new ForbiddenException('Can\'t get messages')
         }
     }
 
