@@ -22,11 +22,11 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Descrição
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript repositório inicial.
 
-## Installation
+## Instalação
 
 ```bash
 $ yarn install
@@ -38,15 +38,15 @@ $ yarn install
 $ docker compose up dev-db
 ```
 
-## Running the app
+## Iniciando o servidor (acesso na porta [5050](https://localhost:5050))
 
 ```bash
 # watch mode
 $ yarn start:dev
 ```
 
-## Pub/Sub Events
-Documentation of events between client and server
+## Eventos Pub/Sub
+Documentação dos eventos entre cliente e servidor
 ## Types
 ```js
 type User = {
@@ -64,30 +64,30 @@ type Message = {
 }
 ```
 
-## Events emitted from server and accessed at client
+## Eventos emitidos do servidor e acessados pelo cliente
 ```js
-// sends a user when he connects to the chat
+// envia um usuário quando ele se conecta ao chat
 server.on('connectUser', User);
 
-// sends a user when he disconnects to the chat
+// envia um usuário quando ele se desconecta do chat
 server.on('disconnectUser', User);
 
-// sends the message received from chat
+// envia a mensagem recebida do chat
 server.on('receivedMessage', Message);
 ```
 
-## Events emitted from client to server
+## Eventos emitidos do cliente para o servidor
 ```js
-// sends array of all online users when an user first connects to the chat
+// envia uma lista de todos os usuários online quando um usuário se conecta pela primeira vez ao chat
 socket.emit('firstConnection', User[])
 
-// send a message submited at chat
+// envia uma mensagem submetida no chat
 socket.emit('sentMessage', Message)
 ```
 
-## Support
+## Documentação
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+[Nest Documentation](https://docs.nestjs.com/support).
 
 ## Stay in touch
 
