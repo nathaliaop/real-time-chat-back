@@ -26,6 +26,9 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript repositório inicial.
 
+## Deploy
+[Deploy do back](https://real-time-chat-socket-back.herokuapp.com)
+
 ## Instalação
 
 ```bash
