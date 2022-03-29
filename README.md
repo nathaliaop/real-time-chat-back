@@ -66,22 +66,22 @@ type Message = {
 
 ## Events emitted from server and accessed at client
 ```js
-# sends a user when he connects to the chat
+// sends a user when he connects to the chat
 server.on('connectUser', User);
 
-# sends a user when he disconnects to the chat
+// sends a user when he disconnects to the chat
 server.on('disconnectUser', User);
 
-# sends the message received from chat
+// sends the message received from chat
 server.on('receivedMessage', Message);
 ```
 
 ## Events emitted from client to server
 ```js
-# sends array of all online users when an user first connects to the chat
+// sends array of all online users when an user first connects to the chat
 socket.emit('firstConnection', User[])
 
-# send a message submited at chat
+// send a message submited at chat
 socket.emit('sentMessage', Message)
 ```
 
