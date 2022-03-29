@@ -29,33 +29,55 @@
 ## Installation
 
 ```bash
-$ npm install
+$ yarn install
+```
+
+## Docker
+
+```bash
+$ docker compose up dev-db
 ```
 
 ## Running the app
 
 ```bash
-# development
-$ npm run start
-
 # watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ yarn start:dev
 ```
 
-## Test
+## Pub/Sub Events
+Documentation of events between client and server
+## Types
+```js
+type User = {
+  id: number,
+  username: string
+}
 
-```bash
-# unit tests
-$ npm run test
+type Message = {
+  id: number,
+  createdAt: Date,
+  text: string,
+  user: {
+      username: string
+  }
+}
+```
 
-# e2e tests
-$ npm run test:e2e
+## Events emitted from server and accessed at client
+```js
+server.on('connectUser', User);
 
-# test coverage
-$ npm run test:cov
+server.on('disconnectUser', User);
+
+server.on('receivedMessage', Message);
+```
+
+## Events emitted from client to server
+```js
+socket.emit('firstConnection', User[])
+      
+socket.emit('sentMessage', Message)
 ```
 
 ## Support
