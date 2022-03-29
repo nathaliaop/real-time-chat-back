@@ -8,7 +8,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { umask } from 'process';
 import { Server, Socket } from 'socket.io';
 import { MessageService } from './message/message.service';
 import { UserService } from './user/user.service';
