@@ -26,7 +26,7 @@ export class MessageService {
       });
       return messages;
     } catch {
-      throw new ForbiddenException("Can't get messages");
+      throw new ForbiddenException('Can\'t get messages');
     }
   }
 
