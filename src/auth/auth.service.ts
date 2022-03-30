@@ -58,7 +58,7 @@ export class AuthService {
         // if passsword incorrect throw exception
         if (!pwMatches)
             throw new ForbiddenException(
-                'Password incorret',
+                'Password incorrect',
             )
         return this.signToken(user.id, user.email)
     }
