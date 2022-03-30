@@ -53,17 +53,26 @@ Documentação dos eventos entre cliente e servidor
 ## Types
 ```js
 type User = {
-  id: number,
-  username: string
+  id: number;
+  username: string;
 }
 
 type Message = {
-  id: number,
-  createdAt: Date,
-  text: string,
+  id: number;
+  createdAt: Date;
+  text: string;
   user: {
-      username: string
+      username: string;
   }
+}
+
+type DeleteMessage = {
+  messageId: number;
+}
+
+type EditMessage = {
+  messageId: number;
+  text: string;
 }
 ```
 
@@ -79,10 +88,10 @@ socket.on('disconnectUser', User);
 socket.on('receivedMessage', Message);
 
 // recebe o id da mensagem deletada do chat
-socket.on('messageDeleted', messageId: number)
+socket.on('messageDeleted', DeleteMessage)
 
 // recebe o id e o conteúdo de uma mensagem editada no chat
-socket.on('messageDeleted', messageId: number, text: string)
+socket.on('messageDeleted', EditMessage)
 ```
 
 ## Eventos emitidos do cliente para o servidor
@@ -94,10 +103,10 @@ socket.emit('firstConnection', User[])
 socket.emit('sentMessage', Message)
 
 // envia o id de uma mensagem deletada do chat
-socket.emit('messageDelete', { messageId })
+socket.emit('messageDelete', DeleteMessage)
   
 // envia o id e o conteúdo de uma mensagem editada no chat
-socket.emit('messageEdit', { messageId, text })
+socket.emit('messageEdit', EditMessage)
 ```
 
 ## Documentação
