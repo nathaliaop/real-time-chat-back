@@ -69,14 +69,20 @@ type Message = {
 
 ## Eventos emitidos do servidor e acessados pelo cliente
 ```js
-// envia um usuário quando ele se conecta ao chat
-server.on('connectUser', User);
+// recebe um usuário quando ele se conecta ao chat
+socket.on('connectUser', User);
 
-// envia um usuário quando ele se desconecta do chat
-server.on('disconnectUser', User);
+// recebe um usuário quando ele se desconecta do chat
+socket.on('disconnectUser', User);
 
-// envia a mensagem recebida do chat
-server.on('receivedMessage', Message);
+// recebe uma mensagem recebida no chat
+socket.on('receivedMessage', Message);
+
+// recebe o id da mensagem deletada do chat
+socket.on('messageDeleted', messageId: number)
+
+// recebe o id e o conteúdo de uma mensagem editada no chat
+socket.on('messageDeleted', messageId: number, text: string)
 ```
 
 ## Eventos emitidos do cliente para o servidor
@@ -86,6 +92,12 @@ socket.emit('firstConnection', User[])
 
 // envia uma mensagem submetida no chat
 socket.emit('sentMessage', Message)
+
+// envia o id de uma mensagem deletada do chat
+socket.emit('messageDelete', { messageId })
+  
+// envia o id e o conteúdo de uma mensagem editada no chat
+socket.emit('messageEdit', { messageId, text })
 ```
 
 ## Documentação
