@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateMessageDto } from './dto/create-message-dto';
+import { MessageDto } from './dto/message-dto';
 
 @Injectable()
 export class MessageService {
@@ -30,7 +30,7 @@ export class MessageService {
     }
   }
 
-  async createMessage(userId: number, dto: CreateMessageDto) {
+  async createMessage(userId: number, dto: MessageDto) {
     console.log(dto);
     //save the new message in the db
     const message = await this.prisma.message.create({
@@ -51,6 +51,33 @@ export class MessageService {
       },
     });
     return message;
+  }
+
+	async editMessageById(
+    userId: number,
+    messageId: number,
+    dto: MessageDto
+  ) {
+    // recupera a mensagem pelo id
+    const message =
+      await this.prisma.message.findUnique({
+        where: {
+          id: messageId,
+        },
+      });
+
+    // confere se o usuário é autor da mensagem
+    if (!message || message.userId !== userId)
+      throw new ForbiddenException('Access to resources denied');
+
+    return this.prisma.message.update({
+      where: {
+        id: messageId,
+      },
+      data: {
+        ...dto,
+      },
+    });
   }
 
   async deleteMessageById(userId: number, messageId: number) {

@@ -25,6 +25,11 @@ type PayloadMessageDelete = {
   messageId: number;
 };
 
+type PayloadMessageEdit = {
+  messageId: number;
+  text: string;
+};
+
 @WebSocketGateway({ cors: true })
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -94,11 +99,31 @@ export class ChatGateway
             this.server.emit('messageDeleted', payload.messageId);
           })
           .catch((error) => {
-            throw new ForbiddenException(error);
+            this.logger.error(error);
           });
       })
       .catch((error) => {
-        throw new ForbiddenException(error);
+        this.logger.error(error);
+      });
+  }
+
+  @SubscribeMessage('messageEdit')
+  handleMessageEdit(client: Socket, payload: PayloadMessageEdit) {
+    this.logger.log(payload.messageId);
+
+    this.getUserFromClient(client)
+      .then((user) => {
+        this.messageService.editMessageById(user.id, payload.messageId, { text: payload.text })
+          .then(() => {
+            this.server.emit('messageEdited', payload.messageId, payload.text);
+            this.logger.log('mensagem editada com sucesso');
+          })
+          .catch((error) => {
+            this.logger.error(error);
+          });
+      })
+      .catch((error) => {
+        this.logger.error(error);
       });
   }
 

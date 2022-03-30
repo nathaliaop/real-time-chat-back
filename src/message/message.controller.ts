@@ -12,7 +12,7 @@ import {
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { MessageService } from './message.service';
-import { CreateMessageDto } from './dto/create-message-dto';
+import { MessageDto } from './dto/message-dto';
 
 @UseGuards(JwtGuard)
 @Controller('messages')
@@ -25,8 +25,17 @@ export class MessageController {
   }
 
   @Post()
-  createMessage(@GetUser('id') userId: number, @Body() dto: CreateMessageDto) {
+  createMessage(@GetUser('id') userId: number, @Body() dto: MessageDto) {
     return this.messageService.createMessage(userId, dto);
+  }
+
+  @Patch(':userId/:messageId')
+  editMessageById(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('messageId', ParseIntPipe) messageId: number,
+    @Body() dto: MessageDto,
+  ) {
+    return this.messageService.editMessageById(userId, messageId, dto);
   }
 
   @Delete(':userId/:messageId')
