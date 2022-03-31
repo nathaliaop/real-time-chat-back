@@ -29,18 +29,18 @@ export class MessageController {
     return this.messageService.createMessage(userId, dto);
   }
 
-  @Patch(':userId/:messageId')
+  @Patch(':messageId')
   editMessageById(
-    @Param('userId', ParseIntPipe) userId: number,
+    @GetUser('id') userId: number,
     @Param('messageId', ParseIntPipe) messageId: number,
     @Body() dto: MessageDto,
   ) {
     return this.messageService.editMessageById(userId, messageId, dto);
   }
 
-  @Delete(':userId/:messageId')
+  @Delete(':messageId')
   deleteMessageById(
-    @Param('userId', ParseIntPipe) userId: number,
+    @GetUser('id') userId: number,
     @Param('messageId', ParseIntPipe) messageId: number,
   ) {
     return this.messageService.deleteMessageById(userId, messageId);

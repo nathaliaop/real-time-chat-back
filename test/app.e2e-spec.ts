@@ -170,7 +170,7 @@ describe('App e2e', () => {
     it('should edit a message', () => {
       return pactum
         .spec()
-        .patch('/messages/$S{userId}/$S{messageId}')
+        .patch('/messages/$S{messageId}')
         .withHeaders({
           Authorization: 'Bearer $S{userToken}',
         })
@@ -182,7 +182,7 @@ describe('App e2e', () => {
     it('should delete a message', () => {
       return pactum
         .spec()
-        .delete('/messages/$S{userId}/$S{messageId}')
+        .delete('/messages/$S{messageId}')
         .withHeaders({
           Authorization: 'Bearer $S{userToken}',
         })
