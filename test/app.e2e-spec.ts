@@ -95,7 +95,7 @@ describe('App e2e', () => {
       });
 
       it('should throw if email empty', () => {
-        return pactum
+       return pactum
           .spec()
           .post('/auth/signin')
           .withBody({
@@ -110,7 +110,20 @@ describe('App e2e', () => {
           .post('/auth/signin')
           .withBody(dto)
           .expectStatus(200)
-          .stores('userAt', 'access_token');
+          .stores('userToken', 'token')
+          .stores('userId', 'userId');
+      });
+    });
+
+    describe('User', () => {
+      it('should get user by id', () => {
+        return pactum
+          .spec()
+          .get('/user/$S{userId}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userToken}',
+          })
+          .expectStatus(200);
       });
     });
   });

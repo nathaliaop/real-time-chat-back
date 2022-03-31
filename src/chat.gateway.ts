@@ -45,7 +45,7 @@ export class ChatGateway
 
   async getUserFromClient(client: Socket): Promise<User> {
     try {
-      let auth_token = client.handshake.headers.authorization;
+      const auth_token = client.handshake.headers.authorization;
       const decodedJwtAccessToken = this.jwtService.decode(
         auth_token.split(' ')[1],
       );
@@ -64,7 +64,7 @@ export class ChatGateway
 
   @SubscribeMessage('sentMessage')
   handleMessage(client: Socket, payload: Payload): void {
-    let auth_token = client.handshake.headers.authorization;
+    const auth_token = client.handshake.headers.authorization;
 
     const decodedJwtAccessToken = this.jwtService.decode(
       auth_token.split(' ')[1],
@@ -94,7 +94,8 @@ export class ChatGateway
 
     this.getUserFromClient(client)
       .then((user) => {
-        this.messageService.deleteMessageById(user.id, payload.messageId)
+        this.messageService
+          .deleteMessageById(user.id, payload.messageId)
           .then(() => {
             this.server.emit('messageDeleted', payload.messageId);
           })
@@ -113,7 +114,8 @@ export class ChatGateway
 
     this.getUserFromClient(client)
       .then((user) => {
-        this.messageService.editMessageById(user.id, payload.messageId, { text: payload.text })
+        this.messageService
+          .editMessageById(user.id, payload.messageId, { text: payload.text })
           .then(() => {
             this.server.emit('messageEdited', payload.messageId, payload.text);
             this.logger.log('mensagem editada com sucesso');
