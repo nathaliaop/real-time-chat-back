@@ -38,7 +38,7 @@ $ yarn install
 ## Docker
 
 ```bash
-$ docker compose up dev-db
+$ docker compose up
 ```
 
 ## Iniciando o servidor (acesso na porta [5050](https://localhost:5050))
@@ -46,6 +46,12 @@ $ docker compose up dev-db
 ```bash
 # watch mode
 $ yarn start:dev
+```
+
+## Testes
+
+```bash
+$ yarn test:e2e
 ```
 
 ## Eventos Pub/Sub
