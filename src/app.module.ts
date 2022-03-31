@@ -7,7 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { MessageModule } from './message/message.module';
 import { ChatGateway } from './chat.gateway';
 import { MessageService } from './message/message.service';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { UserService } from './user/user.service';
 
 @Module({
@@ -19,8 +19,8 @@ import { UserService } from './user/user.service';
     UserModule,
     PrismaModule,
     MessageModule,
-    JwtModule.register({})
+    JwtModule.register({}),
   ],
-  providers: [ChatGateway, MessageService, UserService]
+  providers: [ChatGateway, MessageService, UserService],
 })
 export class AppModule {}

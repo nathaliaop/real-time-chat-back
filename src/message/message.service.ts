@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { MessageDto } from './dto/message-dto';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class MessageService {
           text: true,
           user: {
             select: {
-							id: true,
+              id: true,
               username: true,
             },
           },
@@ -26,7 +26,7 @@ export class MessageService {
       });
       return messages;
     } catch {
-      throw new ForbiddenException('Can\'t get messages');
+      throw new ForbiddenException("Can't get messages");
     }
   }
 
@@ -44,7 +44,7 @@ export class MessageService {
         text: true,
         user: {
           select: {
-						id: true,
+            id: true,
             username: true,
           },
         },
@@ -53,18 +53,13 @@ export class MessageService {
     return message;
   }
 
-	async editMessageById(
-    userId: number,
-    messageId: number,
-    dto: MessageDto
-  ) {
+  async editMessageById(userId: number, messageId: number, dto: MessageDto) {
     // recupera a mensagem pelo id
-    const message =
-      await this.prisma.message.findUnique({
-        where: {
-          id: messageId,
-        },
-      });
+    const message = await this.prisma.message.findUnique({
+      where: {
+        id: messageId,
+      },
+    });
 
     // confere se o usuário é autor da mensagem
     if (!message || message.userId !== userId)
@@ -94,10 +89,10 @@ export class MessageService {
     }
 
     // deleta mensagem
-		await this.prisma.message.delete({
-			where: {
-				id: messageId,
-			}
-		});
+    await this.prisma.message.delete({
+      where: {
+        id: messageId,
+      },
+    });
   }
 }
