@@ -78,8 +78,6 @@ export class ChatGateway
         text: payload.text,
       })
       .then((message) => {
-        console.log(message);
-
         this.server.emit('receivedMessage', message, client.id);
       });
   }

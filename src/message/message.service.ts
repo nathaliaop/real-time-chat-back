@@ -31,7 +31,6 @@ export class MessageService {
   }
 
   async createMessage(userId: number, dto: MessageDto) {
-    console.log(dto);
     //save the new message in the db
     const message = await this.prisma.message.create({
       data: {
