@@ -4,6 +4,7 @@ import * as pactum from 'pactum';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { AppModule } from '../src/app.module';
 import { AuthDto } from '../src/auth/dto';
+import { MessageDto } from 'src/message/dto/message-dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -111,81 +112,92 @@ describe('App e2e', () => {
           .withBody(dto)
           .expectStatus(200)
           .stores('userToken', 'token')
-          .stores('userId1', 'userId')
-          .inspect();
+          .stores('userId', 'userId');
       });
     });
+  });
+  describe('User', () => {
+    it('should get user by id', () => {
+      return pactum
+        .spec()
+        .get('/users/$S{userId}')
+        .withHeaders({
+          Authorization: 'Bearer $S{userToken}',
+        })
+        .expectStatus(200);
+    });
+  });
 
-    describe('User', () => {
-      it('should get user by id', () => {
-        return pactum
-          .spec()
-          .get('/users/$S{userId1}')
-          .withHeaders({
-            Authorization: 'Bearer $S{userToken}',
-          })
-          .expectStatus(200);
-      });
+  describe('Message', () => {
+    const dto: MessageDto = {
+      text: 'Eu sou uma mensagem elegante',
+    };
+    it('should get no messages', () => {
+      return pactum
+        .spec()
+        .get('/messages')
+        .withHeaders({
+          Authorization: 'Bearer $S{userToken}',
+        })
+        .expectStatus(200)
+        .expectBodyContains([]);
+    });
 
-      /*it('should get no messages', () => {
-        return pactum
-          .spec()
-          .get('/user/$S{userId}')
-          .withHeaders({
-            Authorization: 'Bearer $S{userToken}',
-          })
-          .expectStatus(200);
-      });
+    it('should create a message', () => {
+      return pactum
+        .spec()
+        .post('/messages')
+        .withHeaders({
+          Authorization: 'Bearer $S{userToken}',
+        })
+        .withBody(dto)
+        .expectStatus(201)
+        .stores('messageId', 'id')
+        .expectBodyContains(dto.text);
+    });
 
-      it('should create a message', () => {
-        return pactum
-          .spec()
-          .get('/user/$S{userId}')
-          .withHeaders({
-            Authorization: 'Bearer $S{userToken}',
-          })
-          .expectStatus(200);
-      });
+    it('should get all messages', () => {
+      return pactum
+        .spec()
+        .get('/messages')
+        .withHeaders({
+          Authorization: 'Bearer $S{userToken}',
+        })
+        .expectStatus(200)
+        .expectBodyContains(dto.text);
+    });
 
-      it('should get all messages', () => {
-        return pactum
-          .spec()
-          .get('/user/$S{userId}')
-          .withHeaders({
-            Authorization: 'Bearer $S{userToken}',
-          })
-          .expectStatus(200);
-      });
+    it('should edit a message', () => {
+      return pactum
+        .spec()
+        .patch('/messages/$S{userId}/$S{messageId}')
+        .withHeaders({
+          Authorization: 'Bearer $S{userToken}',
+        })
+        .withBody(dto)
+        .expectStatus(200)
+        .expectBodyContains(dto.text);
+    });
 
-      it('should edit a message', () => {
-        return pactum
-          .spec()
-          .get('/user/$S{userId}')
-          .withHeaders({
-            Authorization: 'Bearer $S{userToken}',
-          })
-          .expectStatus(200);
-      });
+    it('should delete a message', () => {
+      return pactum
+        .spec()
+        .delete('/messages/$S{userId}/$S{messageId}')
+        .withHeaders({
+          Authorization: 'Bearer $S{userToken}',
+        })
+        .expectStatus(200);
+    });
 
-      it('should delete a message', () => {
-        return pactum
-          .spec()
-          .get('/user/$S{userId}')
-          .withHeaders({
-            Authorization: 'Bearer $S{userToken}',
-          })
-          .expectStatus(200);
-      });
-
-      it('should get no messages', () => {
-        return pactum
-          .spec()
-          .get('/user/$S{userId}')
-          .withHeaders({
-            Authorization: 'Bearer $S{userToken}',
-          })
-          .expectStatus(200);
-      });*/
+    it('should get no messages', () => {
+      return pactum
+        .spec()
+        .get('/messages')
+        .withHeaders({
+          Authorization: 'Bearer $S{userToken}',
+        })
+        .expectStatus(200)
+        .expectBodyContains([]);
     });
   });
 });
