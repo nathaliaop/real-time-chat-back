@@ -1,4 +1,5 @@
 import {
+  ConsoleLogger,
   Controller,
   Get,
   Param,
@@ -20,8 +21,8 @@ export class UserController {
     return user;
   }
 
-  @Get()
+  @Get(':userId')
   getUser(@Param('userId', ParseIntPipe) userId: number) {
-    return this.getUser(userId);
+    return this.userService.getUser(userId);
   }
 }

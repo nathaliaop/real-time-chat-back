@@ -95,7 +95,7 @@ describe('App e2e', () => {
       });
 
       it('should throw if email empty', () => {
-       return pactum
+        return pactum
           .spec()
           .post('/auth/signin')
           .withBody({
@@ -111,12 +111,23 @@ describe('App e2e', () => {
           .withBody(dto)
           .expectStatus(200)
           .stores('userToken', 'token')
-          .stores('userId', 'userId');
+          .stores('userId1', 'userId')
+          .inspect();
       });
     });
 
     describe('User', () => {
       it('should get user by id', () => {
+        return pactum
+          .spec()
+          .get('/users/$S{userId1}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userToken}',
+          })
+          .expectStatus(200);
+      });
+
+      /*it('should get no messages', () => {
         return pactum
           .spec()
           .get('/user/$S{userId}')
@@ -125,6 +136,56 @@ describe('App e2e', () => {
           })
           .expectStatus(200);
       });
+
+      it('should create a message', () => {
+        return pactum
+          .spec()
+          .get('/user/$S{userId}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userToken}',
+          })
+          .expectStatus(200);
+      });
+
+      it('should get all messages', () => {
+        return pactum
+          .spec()
+          .get('/user/$S{userId}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userToken}',
+          })
+          .expectStatus(200);
+      });
+
+      it('should edit a message', () => {
+        return pactum
+          .spec()
+          .get('/user/$S{userId}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userToken}',
+          })
+          .expectStatus(200);
+      });
+
+      it('should delete a message', () => {
+        return pactum
+          .spec()
+          .get('/user/$S{userId}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userToken}',
+          })
+          .expectStatus(200);
+      });
+
+      it('should get no messages', () => {
+        return pactum
+          .spec()
+          .get('/user/$S{userId}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userToken}',
+          })
+          .expectStatus(200);
+      });*/
     });
   });
 });
