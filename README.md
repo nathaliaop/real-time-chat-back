@@ -41,6 +41,11 @@ $ yarn install
 $ docker compose up
 ```
 
+## Prisma
+```bash
+$ npx prisma migrate dev
+```
+
 ## Iniciando o servidor (acesso na porta [5050](https://localhost:5050))
 
 ```bash
